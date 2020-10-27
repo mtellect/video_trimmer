@@ -1,10 +1,11 @@
 import 'dart:io';
+import 'package:cached_video_player/cached_video_player.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
+// import 'package:video_player/video_player.dart';
 import 'package:video_trimmer/thumbnail_viewer.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 
-VideoPlayerController videoPlayerController;
+CachedVideoPlayerController videoPlayerController;
 
 class TrimEditor extends StatefulWidget {
   final double viewerWidth;

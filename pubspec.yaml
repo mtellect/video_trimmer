@@ -11,7 +11,8 @@ dependencies:
     sdk: flutter
 
   file_picker: ^2.0.0
-  video_player: ^0.11.0
+#  video_player: ^0.11.0
+  cached_video_player: ^1.0.3
   flutter_ffmpeg: ^0.3.0
   video_thumbnail: ^0.2.1
   path_provider: ^1.6.7

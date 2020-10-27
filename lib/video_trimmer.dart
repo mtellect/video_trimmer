@@ -1,13 +1,14 @@
 library video_trimmer;
 
 import 'dart:io';
-import 'package:path/path.dart';
 
+import 'package:cached_video_player/cached_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:video_player/video_player.dart';
+// import 'package:video_player/video_player.dart';
 import 'package:video_trimmer/file_formats.dart';
 import 'package:video_trimmer/storage_dir.dart';
 import 'package:video_trimmer/trim_editor.dart';
@@ -30,7 +31,8 @@ class Trimmer {
   Future<void> loadVideo({@required File videoFile}) async {
     currentVideoFile = videoFile;
     if (currentVideoFile != null) {
-      videoPlayerController = VideoPlayerController.file(currentVideoFile);
+      videoPlayerController =
+          CachedVideoPlayerController.file(currentVideoFile);
       await videoPlayerController.initialize().then((_) {
         TrimEditor(
           viewerHeight: 50,
@@ -73,7 +75,8 @@ class Trimmer {
     }
 
     // Directory + folder name
-    final Directory _directoryFolder = Directory('${_directory.path}/$folderName/');
+    final Directory _directoryFolder =
+        Directory('${_directory.path}/$folderName/');
 
     if (await _directoryFolder.exists()) {
       // If folder already exists return path
@@ -82,7 +85,8 @@ class Trimmer {
     } else {
       print('Creating');
       // If folder does not exists create folder and then return its path
-      final Directory _directoryNewFolder = await _directoryFolder.create(recursive: true);
+      final Directory _directoryNewFolder =
+          await _directoryFolder.create(recursive: true);
       return _directoryNewFolder.path;
     }
   }
@@ -174,7 +178,8 @@ class Trimmer {
     String _command;
 
     // Formatting Date and Time
-    String dateTime = DateFormat('yyyy-MMdd-HHmmss').format(DateTime.now()).toString();
+    String dateTime =
+        DateFormat('yyyy-MMdd-HHmmss').format(DateTime.now()).toString();
 
     // String _resultString;
     String _outputPath;
@@ -206,7 +211,8 @@ class Trimmer {
       _outputFormatString = outputFormat.toString();
     }
 
-    String _trimLengthCommand = '-i "$_videoPath" -ss $startPoint -t ${endPoint - startPoint}';
+    String _trimLengthCommand =
+        '-i "$_videoPath" -ss $startPoint -t ${endPoint - startPoint}';
 
     if (ffmpegCommand == null) {
       _command = '$_trimLengthCommand -c:a copy ';
@@ -244,7 +250,8 @@ class Trimmer {
 
     print('ffmpeg command: ' + _command);
     int ret = await _flutterFFmpeg.execute(_command);
-    if (ret != 0) throw Exception({'error': ret, 'message': 'ffmpeg command error'});
+    if (ret != 0)
+      throw Exception({'error': ret, 'message': 'ffmpeg command error'});
 
     return _outputPath;
   }
@@ -271,8 +278,10 @@ class Trimmer {
       await videoPlayerController.pause();
       return false;
     } else {
-      if (videoPlayerController.value.position.inMilliseconds >= endValue.toInt()) {
-        await videoPlayerController.seekTo(Duration(milliseconds: startValue.toInt()));
+      if (videoPlayerController.value.position.inMilliseconds >=
+          endValue.toInt()) {
+        await videoPlayerController
+            .seekTo(Duration(milliseconds: startValue.toInt()));
         await videoPlayerController.play();
         return true;
       } else {
